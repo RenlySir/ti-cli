@@ -27,32 +27,7 @@ var getTiDBInfoCMD = &cobra.Command{
 }
 
 func getInfo(_ *cobra.Command, args []string) error {
-	body, status, err := httpGet("/status")
-	if err != nil {
-		return err
-	}
-	if status != http.StatusOK {
-		fmt.Println("status=", status)
-		fmt.Println(string(body))
-		return nil
-	}
-	type response struct {
-		Connections int64  `json:"id"`
-		Version     string `json:"version"`
-		Git_hash    string `json:"git_hash"`
-	}
-
-	var res response
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		fmt.Println("invalid response:", string(body))
-		return err
-	}
-
-	fmt.Println("this tidb cluster current connection number is : ", res.Connections)
-	fmt.Println("this tidb cluster version is : ", res.Version)
-	fmt.Println("this tidb cluster git_hash is : ", res.Git_hash)
-
+	httpPrint("/status")
 	return nil
 }
 
