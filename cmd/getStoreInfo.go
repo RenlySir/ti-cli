@@ -5,7 +5,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -27,15 +29,13 @@ var getStoreCMD = &cobra.Command{
 }
 
 func getStore(_ *cobra.Command, args []string) error {
-
-	// httpPrint(pdurls)
 	showStoreHost()
 	return nil
 }
 
 func showStoreHost() error {
 
-	body, status, err := httpGet(pdurls)
+	body, status, err := httpGetPd(pdurls)
 	if err != nil {
 		return err
 	}
@@ -50,12 +50,28 @@ func showStoreHost() error {
 
 	fmt.Println("this tidb cluster store count is : ", data["count"])
 	storeinfo := data["stores"].([]interface{})
-	fmt.Println("store id and status address relation is :")
+	fmt.Println("store id and status address relation and tikv status is :")
 	for _, item := range storeinfo {
 		storeinfo := item.(map[string]interface{})
 		st := storeinfo["store"].(map[string]interface{})
-		fmt.Printf("%v, %v \n", st["id"], st["status_address"])
+		fmt.Printf("%v, %v, %v \n", st["id"], st["status_address"], st["state_name"])
 	}
 
 	return nil
+}
+
+func httpGetPd(path string) (body []byte, status int, err error) {
+	url := "http://" + pdHost.String() + ":" + strconv.Itoa(int(pdPort)) + "/" + path
+	resp, err := ctlClient.Get(url)
+	if err != nil {
+		return
+	}
+	status = resp.StatusCode
+	defer func() {
+		if errClose := resp.Body.Close(); errClose != nil && err == nil {
+			err = errClose
+		}
+	}()
+	body, err = ioutil.ReadAll(resp.Body)
+	return
 }
