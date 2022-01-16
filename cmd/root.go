@@ -57,11 +57,10 @@ func Execute() error {
 
 func init() {
 
-	rootCmd.AddCommand(getTiDBInfoCMD)
-
-	rootCmd.PersistentFlags().IPVarP(&host, "host", "", net.ParseIP("172.16.7.150"), "TiDB server port")
+	rootCmd.AddCommand(getTiDBInfoCMD, getStoreCMD)
+	rootCmd.PersistentFlags().IPVarP(&host, "host", "", net.ParseIP("127.0.0.1"), "TiDB server port")
 	rootCmd.PersistentFlags().Uint16VarP(&port, "port", "", 10080, "TiDB server status port")
-	rootCmd.PersistentFlags().IPVarP(&pdHost, "pdHost", "", net.ParseIP("172.16.7.150"), "PD server port")
+	rootCmd.PersistentFlags().IPVarP(&pdHost, "pdHost", "", net.ParseIP("127.0.0.1"), "PD server port")
 	rootCmd.PersistentFlags().Uint16VarP(&pdPort, "pdPort", "", 2379, "PD server status port")
 	rootCmd.PersistentFlags().StringVarP(&user, "user", "", "", "user name")
 	rootCmd.PersistentFlags().StringVarP(&passwd, "password", "", "", "user passwd")
