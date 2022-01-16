@@ -21,8 +21,8 @@ func init() {
 
 var getTiDBInfoCMD = &cobra.Command{
 	Use:   "getinfo",
-	Short: "ti-cli get tidb info",
-	Long:  `ti-cli get all tidb info by rest interface`,
+	Short: "ti-cli get tidb cluster status info",
+	Long:  `ti-cli get all tidb cluster status info by rest interface`,
 	RunE:  getInfo,
 }
 
@@ -54,7 +54,7 @@ func httpPrint(path string) error {
 	}
 	if status != http.StatusOK {
 		// Print response body directly if status is not ok.
-		fmt.Println(string(body))
+		fmt.Println("host or port maybe wrong")
 		return nil
 	}
 	var prettyJSON bytes.Buffer
