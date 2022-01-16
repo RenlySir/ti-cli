@@ -41,7 +41,7 @@ func genDocument(c *cobra.Command, args []string) error {
 		Short: "ti-cli controller",
 		Long:  `ti-cli is a command tool for tidb dba`,
 	}
-	docCmd.AddCommand(getTiDBInfoCMD)
+	docCmd.AddCommand(getTiDBInfoCMD, getStoreCMD)
 	fmt.Println("Generating documents...")
 	if err := doc.GenMarkdownTree(docCmd, docDir); err != nil {
 		return err
@@ -58,6 +58,7 @@ func Execute() error {
 func init() {
 
 	rootCmd.AddCommand(getTiDBInfoCMD, getStoreCMD)
+
 	rootCmd.PersistentFlags().IPVarP(&host, "host", "", net.ParseIP("127.0.0.1"), "TiDB server port")
 	rootCmd.PersistentFlags().Uint16VarP(&port, "port", "", 10080, "TiDB server status port")
 	rootCmd.PersistentFlags().IPVarP(&pdHost, "pdHost", "", net.ParseIP("127.0.0.1"), "PD server port")
