@@ -5,9 +5,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -58,20 +56,4 @@ func showStoreHost() error {
 	}
 
 	return nil
-}
-
-func httpGetPd(path string) (body []byte, status int, err error) {
-	url := "http://" + pdHost.String() + ":" + strconv.Itoa(int(pdPort)) + "/" + path
-	resp, err := ctlClient.Get(url)
-	if err != nil {
-		return
-	}
-	status = resp.StatusCode
-	defer func() {
-		if errClose := resp.Body.Close(); errClose != nil && err == nil {
-			err = errClose
-		}
-	}()
-	body, err = ioutil.ReadAll(resp.Body)
-	return
 }
