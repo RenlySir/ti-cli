@@ -19,9 +19,10 @@ var (
 	// sslCert   string
 	// sslKey    string
 	ctlClient *http.Client
-	// schema    string
-	user   string
-	passwd string
+	db        string
+	table     string
+	user      string
+	passwd    string
 )
 
 var rootCmd = &cobra.Command{
@@ -41,7 +42,7 @@ func genDocument(c *cobra.Command, args []string) error {
 		Short: "ti-cli controller",
 		Long:  `ti-cli is a command tool for tidb dba`,
 	}
-	docCmd.AddCommand(getTiDBInfoCMD, getStoreCMD)
+	docCmd.AddCommand(getTiDBInfoCMD, getStoreCMD, getRegionCMD)
 	fmt.Println("Generating documents...")
 	if err := doc.GenMarkdownTree(docCmd, docDir); err != nil {
 		return err
@@ -57,7 +58,7 @@ func Execute() error {
 
 func init() {
 
-	rootCmd.AddCommand(getTiDBInfoCMD, getStoreCMD)
+	rootCmd.AddCommand(getTiDBInfoCMD, getStoreCMD, getRegionCMD)
 
 	rootCmd.PersistentFlags().IPVarP(&host, "host", "", net.ParseIP("127.0.0.1"), "TiDB server port")
 	rootCmd.PersistentFlags().Uint16VarP(&port, "port", "", 10080, "TiDB server status port")
@@ -65,6 +66,8 @@ func init() {
 	rootCmd.PersistentFlags().Uint16VarP(&pdPort, "pdPort", "", 2379, "PD server status port")
 	rootCmd.PersistentFlags().StringVarP(&user, "user", "", "", "user name")
 	rootCmd.PersistentFlags().StringVarP(&passwd, "password", "", "", "user passwd")
+	rootCmd.PersistentFlags().StringVarP(&db, "db", "", "", "database name")
+	rootCmd.PersistentFlags().StringVarP(&table, "table", "", "", "table name")
 	rootCmd.Flags().BoolVar(&genDoc, "gendoc", false, "generate doc file")
 	if err := rootCmd.Flags().MarkHidden("gendoc"); err != nil {
 		fmt.Printf("can not mark hidden flag, flag %s is not found", "gendoc")
