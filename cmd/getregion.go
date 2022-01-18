@@ -66,10 +66,42 @@ func getRegion(_ *cobra.Command, args []string) error {
 			for _, idxregion := range iregions {
 				iregion := idxregion.(map[string]interface{})
 				iregion_id := iregion["region_id"]
-				istoreid := iregion["leader"]
-				fmt.Printf("index region id is : %v, store id is: %v \n", iregion_id, istoreid)
+				getRegionInfo(iregion_id)
+				istoreid := iregion["leader"].(map[string]interface{})
+				fmt.Printf("index region id is : %v, store id is: %v \n", iregion_id, istoreid["store_id"])
 			}
 
+		}
+	}
+
+	return nil
+}
+
+func getRegionInfo(region interface{}) (err error) {
+	region_id := strconv.FormatFloat(region.(float64), 'f', -1, 64)
+	url := "http://" + host.String() + ":" + strconv.Itoa(int(port)) + "/" + tiregions + "/" + region_id
+	body, status, err := httpGetRegion(url)
+	if err != nil {
+		return err
+	}
+	if status != http.StatusOK {
+		// Print response body directly if status is not ok.
+		fmt.Println("host or port maybe wrong")
+		return nil
+	}
+	var data map[string]interface{}
+	json.Unmarshal(body, &data)
+	fmt.Printf("start key is : %v,end key is: %v \n", data["start_key"], data["end_key"])
+
+	frames := data["frames"].([]interface{})
+
+	for _, item := range frames {
+		itemjson := item.(map[string]interface{})
+		if itemjson["is_record"] == false {
+			fmt.Printf("index region ,it db name is : %v,table name is: %v,table id is: %v ,index name is: %v ,index id is: %v \n", itemjson["db_name"], itemjson["table_name"], itemjson["table_id"], itemjson["index_name"], itemjson["index_id"])
+
+		} else {
+			fmt.Printf("table region ,db name is : %v,table name is: %v,table id is: %v \n", itemjson["db_name"], itemjson["table_name"], itemjson["table_id"])
 		}
 	}
 
