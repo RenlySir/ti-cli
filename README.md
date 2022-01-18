@@ -31,7 +31,7 @@ store id and status address relation and tikv status is :
 3.getRegions
 根据库名表名，快速查到涉及到的region，以及涉及到的region中的信息
 ```
-sirlan@sirdeMacBook-Pro ti-cli % ./ti-cli getRegions --host 172.16.7.150 --port 10080 --db test --table loan_contract_info
+sirlan@sirdeMacBook-Pro ti-cli % ./ti-cli getRegions --host 127.0.0.1 --port 10080 --db test --table loan_contract_info
 table name is : loan_contract_info，table id is : 275 
 region id is : 324201, store id is : 1 
 index name is : idx_cui01_loan_contract_info, index id is : 1 
