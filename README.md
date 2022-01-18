@@ -6,23 +6,28 @@
 
 1.getinfo
 获取tidb集群状态信息，是一个试验的接口，如下：
+```
 sirlan@sirdeMacBook-Pro ti-cli % ./ti-cli getinfo --host 127.0.0.1  --port 10080                                {
     "connections": 0,
     "version": "5.7.25-TiDB-v5.0.0",
     "git_hash": "bdac0885cd11bdf571aad9353bfc24e13554b91c"
 }
+```
 
 2.getStore
 快速获取store id和tikv实例映射关系
+```
 sirlan@sirdeMacBook-Pro ti-cli % ./ti-cli getStore --pdHost 127.0.0.1 --pdPort 2379 
 this tidb cluster store count is :  3
 store id and status address relation and tikv status is :
 1, 172.16.7.229:20180, Up 
 5, 172.16.7.200:20180, Up 
 604, 172.16.7.176:20180, Up 
+```
 
 3.getRegions
 根据库名表名，快速查到涉及到的region，以及涉及到的region中的信息
+```
 sirlan@sirdeMacBook-Pro ti-cli % ./ti-cli getRegions --host 172.16.7.150 --port 10080 --db test --table loan_contract_info
 table name is : loan_contract_info，table id is : 275 
 region id is : 324201, store id is : 1 
@@ -48,4 +53,4 @@ index region ,it db name is : test,table name is: loan_contract_info,table id is
 table region ,db name is : test,table name is: loan_contract_info,table id is: 275 
 table region ,db name is : sbtest1,table name is: sbtest1,table id is: 270 
 index region id is : 324201, store id is: 1 
-
+```
